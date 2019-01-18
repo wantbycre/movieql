@@ -1,57 +1,52 @@
-let movies = [
-    {
-        id: 0,
-        name: "Star Wars - The new one",
-        score: 12
-    },
-    {
-        id: 1,
-        name: "Avengers - The new Story",
-        score: 12
-    },
-    {
-        id: 2,
-        name: "The Godfather 1",
-        score: 99
-    },
-    {
-        id: 3,
-        name: "Logan",
-        score: 6
-    },
-];
+import axios from "axios";
 
-// list
-export const getMovies = () => movies;
+const BASE_URL = "https://yts.am/api/v2/";
+const LIST_MOVIES_URL = `${BASE_URL}list_movies.json`;
+const MOVIE_DETAILSS_URL = `${BASE_URL}movie_details.json`;
+const MOVIE_SUGGESTIONS_URL = `${BASE_URL}movie_suggestions.json`;
 
-// movie search
-export const getById = id => {
-    const filteredMovies = movies.filter(movie => movie.id === id);
-    return filteredMovies[0]
+export const getMovies = async (limit, rating) => {
+    const {
+        data: {
+            data: {
+                movies
+            }
+        }
+    } = await axios(LIST_MOVIES_URL, {
+        params: {
+            limit,
+            minimum_rating: rating
+        }
+    });
+    return movies;
 }
 
-// movie delete
-export const deleteMovie = id => {
-    // 선택된 id를 제외한 movies를 가져옴
-    const cleanedMovies = movies.filter(movie => movie.id !== id);
-
-    // 지워진 값이 있다면 기존배열에 대치 하고 return ture
-    if(movies.length > cleanedMovies.length) {
-        movies = cleanedMovies;
-        return true;
-    }else{
-        return false;
-    }
+export const getMovie = async id => {
+    const {
+        data: {
+            data: {
+                movie
+            }
+        }
+    } = await axios(MOVIE_DETAILSS_URL, {
+        params: {
+            movie_id: id
+        }
+    });
+    return movie;
 }
 
-// movie add
-export const addMovie = (name, score) => {
-    const newMovie = {
-        id: `${movies.length + 1}`,
-        name,
-        score
-    };
-
-    movies.push(newMovie);
-    return newMovie;
+export const getSuggestions = async id => {
+    const {
+        data: {
+            data: {
+                movies
+            }
+        }
+    } = await axios(MOVIE_SUGGESTIONS_URL, {
+        params: {
+            movie_id: id
+        }
+    });
+    return movies;
 }
