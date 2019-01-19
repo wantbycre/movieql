@@ -2,6 +2,7 @@ type Movie {
   id: Int!
   title: String!
   rating: Float!
+  genres: [String!]
   summary: String!
   language: String!
   medium_cover_image: String!
